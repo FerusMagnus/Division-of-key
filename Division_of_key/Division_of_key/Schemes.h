@@ -11,8 +11,6 @@ public:
 
 	void First_Schema(int**, int, int, int*);
 
-	int Second_Schema(int*, int, int, int, int*);
-
 	~Schemes();
 };
 
