@@ -51,6 +51,8 @@ namespace Division_of_key
                 Console.Write(schema.Mod(buffer, p) + " ");
             }
 
+            Console.Write("Выберете способ разделения ключа (Мажоритарный - 1; Пороговый - 2): ");
+
             Console.ReadKey();
         }
     }
