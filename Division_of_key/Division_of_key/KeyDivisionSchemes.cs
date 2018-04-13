@@ -19,32 +19,38 @@ namespace Division_of_key
             _key = key;
         }
 
-        public int[,] FragmentationKey(int k)
+        public List<List<int>> FragmentationKey(int k)
         {
             Random rand = new Random();
 
-            int[,] keyFragments = new int[k, _key.Length];
+            List<List<int>> keyFragments = new List<List<int>>();
+            for (int i = 0; i < k; i++)
+                keyFragments.Add(new List<int>());
 
             for (int i = 0; i < k - 1; i++)
                 for (int j = 0; j < _key.Length; j++)
-                    keyFragments[i, j] = Mod(rand.Next(), _p);
+                    keyFragments[i].Add(Mod(rand.Next(), _p));
 
             for (int j = 0; j < _key.Length; j++)
             {
                 int buffer = _key[j];
                 for (int i = 0; i < k - 1; i++)
-                    buffer -= keyFragments[i, j];
+                    buffer -= keyFragments[i][j];
 
-                keyFragments[k - 1, j] = Mod(buffer, _p);
+                keyFragments[k - 1][j] = Mod(buffer, _p);
             }
 
             return keyFragments;
         }
 
-        public () MajorityDivisionKey()
+        public (int[,], List<List<List<int>>>) MajorityDivisionKey()
         {
             int h = (_n + 1) / 2;
+            int k = Factorial(_n) / (Factorial((_n + 1) / 2) * Factorial((_n - 1) / 2));
             List<int[]> permutationList = new List<int[]>();
+
+            // Фрагментируем ключ.
+            List <List<int>> keyFragments = FragmentationKey(k);
 
             // Создаём первую из возможных перестановок 
             // и определяем начальное количество единиц.
@@ -86,6 +92,14 @@ namespace Division_of_key
                     }
                 }
             }
+
+            List<List<List<int>>> result = new List<List<List<int>>>();
+            for (int i = 0; i < k; i++)
+                result.Add(new List<List<int>>());
+
+            for (int i = 0; i < k; i++)
+                result[i].Add(new List<int>());
+
         }
 
         public int Mod(double a, double b)
@@ -93,6 +107,14 @@ namespace Division_of_key
             double q = Math.Floor(a / b);
 
             return (int)(a - b * q);
+        }
+
+        private int Factorial(int a)
+        {
+            if (a == 0)
+                return 1;
+            else
+                return a * Factorial(a - 1);
         }
     }
 }

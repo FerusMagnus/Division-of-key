@@ -29,9 +29,6 @@ namespace Division_of_key
 
             KeyDivisionSchemes schema = new KeyDivisionSchemes(n, p, key);
 
-            // Фрагментируем ключ.
-            int[,] keyFragments = schema.FragmentationKey();
-
             Console.WriteLine("Фрагменты разделяемого ключа:");
             for (int i = 0; i < n; i++)
             {
