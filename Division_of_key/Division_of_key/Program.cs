@@ -51,6 +51,8 @@ namespace Division_of_key
                 Console.Write(schema.Mod(buffer, p) + " ");
             }
 
+            schema.MajorityDivisionKey();
+
             Console.ReadKey();
         }
     }

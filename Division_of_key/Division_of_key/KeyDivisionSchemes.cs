@@ -41,6 +41,55 @@ namespace Division_of_key
             return keyFragments;
         }
 
+        public void MajorityDivisionKey()
+        {
+            int h = (_n + 1) / 2;
+            List<int[]> permutationList = new List<int[]>();
+
+            // Создаём первую из возможных перестановок 
+            // и определяем начальное количество единиц.
+            int[] initCombination = new int[_n];
+            for (int i = 0; i < h; i++)
+                initCombination[i] = 1;
+
+            // Номера символов в перестановке.
+            int[] numbers = new int[_n];
+            for (int i = 0; i < _n; i++)
+                numbers[i] = i;
+
+            Permutation permutation = new Permutation();
+
+            // Генерим все возможные перестановки исходной комбинации 0 и 1.
+            do
+            {
+                int[] buffer = new int[initCombination.Length];
+                for (int i = 0; i < initCombination.Length; i++)
+                    buffer[i] = initCombination[numbers[i]];
+
+                permutationList.Add(buffer);
+            }
+            while (permutation.GenerationPermutation(ref numbers));
+
+            // Удаляем повторяющиеся перестановки.
+            for (int i = 0; i < permutationList.Count; i++)
+            {
+                int count = 0;
+
+                for (int j = 0; j < permutationList.Count; j++)
+                {
+                    if (permutationList[i].SequenceEqual(permutationList[j]) && count == 0)
+                        count++;
+                    else if (permutationList[i].SequenceEqual(permutationList[j]) && count > 0)
+                    {
+                        permutationList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+
+
+        }
+
         public int Mod(double a, double b)
         {
             double q = Math.Floor(a / b);
