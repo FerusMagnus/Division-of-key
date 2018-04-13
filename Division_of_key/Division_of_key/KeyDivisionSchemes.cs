@@ -19,29 +19,29 @@ namespace Division_of_key
             _key = key;
         }
 
-        public int[,] FragmentationKey()
+        public int[,] FragmentationKey(int k)
         {
             Random rand = new Random();
 
-            int[,] keyFragments = new int[_n, _key.Length];
+            int[,] keyFragments = new int[k, _key.Length];
 
-            for (int i = 0; i < _n - 1; i++)
+            for (int i = 0; i < k - 1; i++)
                 for (int j = 0; j < _key.Length; j++)
                     keyFragments[i, j] = Mod(rand.Next(), _p);
 
             for (int j = 0; j < _key.Length; j++)
             {
                 int buffer = _key[j];
-                for (int i = 0; i < _n - 1; i++)
+                for (int i = 0; i < k - 1; i++)
                     buffer -= keyFragments[i, j];
 
-                keyFragments[_n - 1, j] = Mod(buffer, _p);
+                keyFragments[k - 1, j] = Mod(buffer, _p);
             }
 
             return keyFragments;
         }
 
-        public void MajorityDivisionKey()
+        public () MajorityDivisionKey()
         {
             int h = (_n + 1) / 2;
             List<int[]> permutationList = new List<int[]>();
@@ -86,8 +86,6 @@ namespace Division_of_key
                     }
                 }
             }
-
-
         }
 
         public int Mod(double a, double b)
