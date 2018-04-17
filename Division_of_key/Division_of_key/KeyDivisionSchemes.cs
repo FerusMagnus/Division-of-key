@@ -27,9 +27,14 @@ namespace Division_of_key
             for (int i = 0; i < k; i++)
                 keyFragments.Add(new List<int>());
 
-            for (int i = 0; i < k - 1; i++)
+            for (int i = 0; i < k; i++)
                 for (int j = 0; j < _key.Length; j++)
-                    keyFragments[i].Add(Mod(rand.Next(), _p));
+                {
+                    if(i == k - 1)
+                        keyFragments[i].Add(0);
+                    else
+                        keyFragments[i].Add(Mod(rand.Next(), _p));
+                }
 
             for (int j = 0; j < _key.Length; j++)
             {
@@ -43,7 +48,7 @@ namespace Division_of_key
             return keyFragments;
         }
 
-        public (int[,], List<List<List<int>>>) MajorityDivisionKey()
+        public (List<List<int>>, List<int[]>, List<List<List<int>>>) MajorityDivisionKey()
         {
             int h = (_n + 1) / 2;
             int k = Factorial(_n) / (Factorial((_n + 1) / 2) * Factorial((_n - 1) / 2));
@@ -94,12 +99,26 @@ namespace Division_of_key
             }
 
             List<List<List<int>>> result = new List<List<List<int>>>();
-            for (int i = 0; i < k; i++)
+            for (int i = 0; i < _n; i++)
                 result.Add(new List<List<int>>());
 
             for (int i = 0; i < k; i++)
                 result[i].Add(new List<int>());
 
+            List<int> zeroList = new List<int>();
+            for (int i = 0; i < keyFragments.Count; i++)
+                zeroList.Add(0);
+
+            for (int j = 0; j < k; j++)
+                for (int i = 0; i < permutationList.Count; i++)
+                {
+                    if (permutationList[i][j] == 1)
+                        result[i].Add(keyFragments[i]);
+                    else
+                        result[i].Add(zeroList);
+                }
+
+            return (keyFragments, permutationList, result);
         }
 
         public int Mod(double a, double b)

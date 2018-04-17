@@ -27,28 +27,42 @@ namespace Division_of_key
             for (int i = 0; i < key.Length; i++)
                 key[i] = Convert.ToInt32(input[i]);
 
-            KeyDivisionSchemes schema = new KeyDivisionSchemes(n, p, key);
+            KeyDivisionSchemes schema = new KeyDivisionSchemes(n, p, key);           
+
+            (List<List<int>>, List<int[]>, List<List<List<int>>>) turple = schema.MajorityDivisionKey();
 
             Console.WriteLine("Фрагменты разделяемого ключа:");
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < turple.Item1.Count; i++)
             {
-                for (int j = 0; j < n; j++)
-                    Console.Write(keyFragments[i, j] + " ");
+                for (int j = 0; j < turple.Item1[i].Count; j++)
+                    Console.Write(turple.Item1[i][j] + " ");
 
                 Console.WriteLine();
             }
 
-            Console.WriteLine("Проверка:");
-            for (int j = 0; j < key.Length; j++)
+            Console.WriteLine("Таблица сгенерированных равновестных кодов:");
+            for (int i = 0; i < turple.Item2.Count; i++)
             {
-                int buffer = 0;
-                for (int i = 0; i < n; i++)
-                    buffer += keyFragments[i, j];
+                for (int j = 0; j < turple.Item2[i].Length; j++)
+                    Console.Write(turple.Item2[i][j] + " ");
 
-                Console.Write(schema.Mod(buffer, p) + " ");
+                Console.WriteLine();
             }
 
-            schema.MajorityDivisionKey();
+            Console.WriteLine("Фрагменты ключей для каждого сотрудника:");
+            for (int tabCount = 0; tabCount < turple.Item3.Count; tabCount++)
+            {
+                Console.WriteLine("Фрагмент " + Convert.ToString(tabCount + 1) + "-го сотрудника");
+                for (int i = 0; i < turple.Item3[tabCount].Count; i++)
+                {
+                    for(int j = 0; j < turple.Item3[tabCount][i].Count; j++)
+                    {
+                        Console.Write(turple.Item3[tabCount][i][j]  + " ");
+                    }
+
+                    Console.WriteLine();
+                }
+            }
 
             Console.ReadKey();
         }
