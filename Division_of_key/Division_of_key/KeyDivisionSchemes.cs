@@ -12,6 +12,12 @@ namespace Division_of_key
         int _p;
         int[] _key;
 
+        /// <summary>
+        /// Класс, реализующий схемы разделения ключа.
+        /// </summary>
+        /// <param name="n">Количество сотрудников, разделяющих ключ.</param>
+        /// <param name="p">Простое число.</param>
+        /// <param name="key">Разделяемый ключ.</param>
         public KeyDivisionSchemes(int n, int p, int[] key)
         {
             _n = n;
@@ -19,7 +25,12 @@ namespace Division_of_key
             _key = key;
         }
 
-        public List<List<int>> FragmentationKey(int k)
+        /// <summary>
+        /// Функция первичного разделения ключа.
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns>Структура фрагментов первично разделённого ключа.</returns>
+        private List<List<int>> FragmentationKey(int k)
         {
             Random rand = new Random();
 
@@ -30,7 +41,7 @@ namespace Division_of_key
             for (int i = 0; i < k; i++)
                 for (int j = 0; j < _key.Length; j++)
                 {
-                    if(i == k - 1)
+                    if (i == k - 1)
                         keyFragments[i].Add(0);
                     else
                         keyFragments[i].Add(Mod(rand.Next(), _p));
@@ -48,14 +59,18 @@ namespace Division_of_key
             return keyFragments;
         }
 
-        public (List<List<int>>, List<int[]>, List<List<List<int>>>) MajorityDivisionKey()
+        /// <summary>
+        /// Функция разделения ключа по мажоритарному принципу.
+        /// </summary>
+        /// <param name="h">Минимальный порог лиц для восстановления ключа.</param>
+        /// <param name="k">Колличество фрагментов ключа.</param>
+        /// <returns>Кортеж: 1) Структура фрагментов первично разделённого ключа; 2) Двумерный массив сгенерированных перестановок фрагментов ключа; 3) Структура фрагментов ключа, разделённых по сотрудникам.</returns>
+        public (List<List<int>>, List<int[]>, List<List<List<int>>>) MajorityDivisionKey(int h, int k)
         {
-            int h = (_n + 1) / 2;
-            int k = Factorial(_n) / (Factorial((_n + 1) / 2) * Factorial((_n - 1) / 2));
             List<int[]> permutationList = new List<int[]>();
 
             // Фрагментируем ключ.
-            List <List<int>> keyFragments = FragmentationKey(k);
+            List<List<int>> keyFragments = FragmentationKey(k);
 
             // Создаём первую из возможных перестановок 
             // и определяем начальное количество единиц.
@@ -86,6 +101,7 @@ namespace Division_of_key
             {
                 int count = 0;
 
+                // Сравниваем перестановки и удаляем совпадающие более одного раза.
                 for (int j = 0; j < permutationList.Count; j++)
                 {
                     if (permutationList[i].SequenceEqual(permutationList[j]) && count == 0)
@@ -98,37 +114,47 @@ namespace Division_of_key
                 }
             }
 
-            List<List<List<int>>> result = new List<List<List<int>>>();
+            // Собираем результат деления ключа.
+            List<List<List<int>>> resultDivisionOfKey = new List<List<List<int>>>();
             for (int i = 0; i < _n; i++)
-                result.Add(new List<List<int>>());
+                resultDivisionOfKey.Add(new List<List<int>>());
 
-            for (int i = 0; i < k; i++)
-                result[i].Add(new List<int>());
+            // Нулевая сторока, для навигации по разделённому ключу.
+            List<int> zeroList = new List<int>() { 0 };
 
-            List<int> zeroList = new List<int>();
-            for (int i = 0; i < keyFragments.Count; i++)
-                zeroList.Add(0);
-
-            for (int j = 0; j < k; j++)
-                for (int i = 0; i < permutationList.Count; i++)
+            for (int j = 0; j < _n; j++)
+                for (int i = 0; i < k; i++)
                 {
                     if (permutationList[i][j] == 1)
-                        result[i].Add(keyFragments[i]);
+                        resultDivisionOfKey[j].Add(keyFragments[i]);
                     else
-                        result[i].Add(zeroList);
+                        resultDivisionOfKey[j].Add(zeroList);
                 }
 
-            return (keyFragments, permutationList, result);
+            return (keyFragments, permutationList, resultDivisionOfKey);
+        }
+
+        public (List<List<int>>, List<int[]>, List<List<List<int>>>) EdgeDivisionKey(int h, int k)
+        {
+            List<int[]> permutationList = new List<int[]>();
+
+            // Фрагментируем ключ.
+            List<List<int>> keyFragments = FragmentationKey(k);
+
+            // Собираем результат деления ключа.
+            List<List<List<int>>> resultDivisionOfKey = new List<List<List<int>>>();
+
+            return (keyFragments, permutationList, resultDivisionOfKey);
         }
 
         public int Mod(double a, double b)
-        {
+        { 
             double q = Math.Floor(a / b);
 
             return (int)(a - b * q);
         }
 
-        private int Factorial(int a)
+        public int Factorial(int a)
         {
             if (a == 0)
                 return 1;
